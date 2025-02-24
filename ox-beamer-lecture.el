@@ -349,11 +349,8 @@ was compiled or raise an error if it couldn't be produced."
   '(;; (1) property, (2) keyword, (3) #+OPTIONS string,
     ;; (4) default value, (5) how to handle multiple keywords
     ;; --- General Export Settings
-    (:with-title nil nil nil t)   ; first nil omits org-latex-title-command
-    (:with-toc nil "toc" nil t)   ; omits frame with toc
     ;; --- LaTeX Export Settings
     (:latex-class "LATEX_CLASS" nil "beamer-lecture" nil)
-    (:latex-hyperref-template nil nil nil t)
     ;; --- Beamer Export Settings
     (:headline-levels nil "H" org-beamer-lecture-frame-level)
     ;; --- Beamer Lecture Export Settings
