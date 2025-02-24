@@ -1,0 +1,10 @@
+# .gitignore for ox-beamer-lecture
+
+# Folders
+*/
+# Demo files
+demo*
+# Backup files
+*~
+# Autosave files
+\#*\#
