@@ -64,7 +64,7 @@ information."
   :type 'integer)
 
 (defcustom org-beamer-lecture-list-default-overlay ""
-  "Default overlay specification for list environments.
+  "Default overlay specification for level 1 list environments.
 
 Includes `\\begin{environment}[<%s>]' for environments `itemize',
 `enumerate', and `description'. This means do not include any
@@ -76,11 +76,10 @@ specification for nested lists, use the LaTeX Beamer command
   :type 'string)
 
 (defcustom org-beamer-lecture-require-lecture t
-  "Whether to prompt for a lecture number to compile during compilation.
+  "Whether to prompt for a lecture number during slides export.
 
-It is also possible to provide the lecture number with a numeric
-prefix argument. If this variable is nil, all lectures will
-always be compiled."
+If this variable is nil, all lectures will always be compiled
+automatically."
   :group 'org-export-beamer-lecture
   :type 'boolean)
 
@@ -88,8 +87,9 @@ always be compiled."
   "Default string used for lecture label.
 
 It is used when exporting to LaTeX beamer lecture in
-`\\lecture{label}{title} '.
-It can be set with the in-buffer setting `#+BEAMER_LECTURE_LABEL'."
+`\\lecture{label}{title}' and is thus used for the folder name
+and file name creation when exporting to slides. It can be set
+with the in-buffer setting `#+BEAMER_LECTURE_LABEL'."
   :group 'org-export-beamer-lecture
   :type 'string)
 
