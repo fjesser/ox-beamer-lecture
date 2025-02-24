@@ -292,7 +292,7 @@ Steps
            ("[[:space:]]+" . "-")                          ; 6)
            )))
     (downcase
-     (seq-reduce #'(lambda (title replacement-pair)
+     (seq-reduce '(lambda (title replacement-pair)
                      (replace-regexp-in-string
                       (car replacement-pair)
                       (cdr replacement-pair)
@@ -544,7 +544,7 @@ It returns only the string within the `\begin{document}' and
 document. As a side effect, it creates the folder for the beamer
 and handout slides as well as the templates for those files.
 Additionally, it records the beamer and handout files which need
-to be compiled by `org-beamer-lecture--compile'.
+to be compiled by the function `org-beamer-lecture--compile'.
 
 CONTENTS is the transcoded contents string. INFO is a
 plist holding export options.
@@ -764,7 +764,6 @@ Return Beamer Presentation PDF file's name."
   (let ((file (org-export-output-file-name ".tex" subtreep))
         (org-beamer-lecture--lecture-number
          (org-beamer-lecture--prompt-lecture))
-        (org-beamer-lecture--to-compile nil)
         (org-beamer-lecture--to-compile nil))
     (org-export-to-file 'beamer-lecture file
       async subtreep visible-only body-only ext-plist
@@ -955,7 +954,7 @@ Return output file's name."
         (org-export-exclude-tags (cons org-beamer-lecture-article-exclude-tag
                                        org-export-exclude-tags)))
     (org-export-to-file 'beamer-lecture-article file
-      async subtreep visible-only body-only ext-plist #'org-latex-compile))))
+      async subtreep visible-only body-only ext-plist #'org-latex-compile)))
 
 (provide 'ox-beamer-lecture)
 ;;; ox-beamer-lecture.el ends here
