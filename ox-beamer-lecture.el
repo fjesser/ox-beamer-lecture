@@ -555,6 +555,8 @@ is no template available."
            org-beamer-lecture-beamer-suffix))
   ;; Process presentation content
   (let ((lecture-labels (org-beamer-lecture--extract-lecture contents))
+        ;; Change title command because of ignorenonframetext option
+        (org-latex-title-command "\\begin{frame}\n\\maketitle\\end{frame}")
         (index 0)) ; Index for while loop
     ;; Check whether input number is allowed
     (when (or (< org-beamer-lecture--lecture-number 0)
