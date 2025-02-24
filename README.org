@@ -54,6 +54,7 @@ Further usage notes
 - Date for each lecture part
   - It is possible to set different dates for different parts of the lecture.
   - Set the =:EXPORT_DATE:= property for the heading that constitutes the lecture part (by default level 1 heading).
+  - If the value is a timestamp, it will be formatted according to =org-export-date-timestamp-format=.
 - Mode dependent content
   - It is possible to include content only for specific modes.
   - Use the =:noarticle:= tag (=org-beamer-lecture-article-exclude-tag=) to exclude content from the article version that should still be exported to slides. For example, use this for an introductory lecture that should not be included in the article version.
