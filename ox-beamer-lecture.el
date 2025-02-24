@@ -583,7 +583,12 @@ is no template available."
                                           ".tex"))
                  (slides-body (format "\\mode<all>{\\input{../%s}}\n\n"
                                       (plist-get info :output-file)))
-                 (tex-template (org-beamer-template slides-body info)))
+                 ;; Logic taken from org-export-as
+                 (tex-template (if (plist-get info :with-cite-processors)
+                                   (org-cite-finalize-export
+                                    (org-beamer-template slides-body info)
+                                    info)
+                                 (org-beamer-template slides-body info))))
             ;; Create directory
             (unless (file-directory-p outdir)
               (make-directory outdir))
