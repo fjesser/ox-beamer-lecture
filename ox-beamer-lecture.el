@@ -115,7 +115,7 @@ The slides' title will be the lecture part's heading. If t, the
 `#+TITLE' value will be inserted as the subtitle and for the
 slides export it will overwrite any in-buffer setting set with
 `#+SUBTITLE:'."
-  :type 'org-export-beamer-lecture
+  :group 'org-export-beamer-lecture
   :type 'boolean)
 
 (defcustom org-beamer-lecture-beamer-suffix "-beamer"
@@ -305,11 +305,11 @@ whitespace."
         '(("\\\\\\w+" . "")
           ("{[^}]*}" . "")
           ("^[[:space:]]*\\(.*?\\)[[:space:]]*$" . "\\1"))))
-    (seq-reduce '(lambda (string replacement-pair)
-                   (replace-regexp-in-string
-                    (car replacement-pair)
-                    (cdr replacement-pair)
-                    string))
+    (seq-reduce (lambda (string replacement-pair)
+                  (replace-regexp-in-string
+                   (car replacement-pair)
+                   (cdr replacement-pair)
+                   string))
                 replacements
                 string)))
 
@@ -328,11 +328,11 @@ Steps
            ("[[:space:]]+-+[[:space:]]+" . "-")
            ("[[:space:]]+" . "-"))))
     (downcase
-     (seq-reduce '(lambda (title replacement-pair)
-                     (replace-regexp-in-string
-                      (car replacement-pair)
-                      (cdr replacement-pair)
-                      title))
+     (seq-reduce (lambda (title replacement-pair)
+                   (replace-regexp-in-string
+                    (car replacement-pair)
+                    (cdr replacement-pair)
+                    title))
                  replacements
                  (org-beamer-lecture-remove-latex title)))))
 
@@ -572,8 +572,8 @@ overlay specification which is <+->."
 (defun org-beamer-lecture-template (contents info)
   "Return document string after Beamer conversion.
 
-It returns only the string within the `\begin{document}' and
-`\end{document}' environment which is exported to the body
+It returns only the string within the `\\begin{document}' and
+`\\end{document}' environment which is exported to the body
 document. As a side effect, it creates the folder for the beamer
 and handout slides as well as the templates for those files.
 Additionally, it records the beamer and handout files which need
@@ -899,7 +899,7 @@ When optional argument VISIBLE-ONLY is non-nil, don't export
 contents of hidden elements.
 
 When optional argument BODY-ONLY is non-nil, only write code
-between `\begin{document}' and `\end{document}'.
+between `\\begin{document}' and `\\end{document}'.
 
 EXT-PLIST, when provided, is a property list with external
 parameters overriding Org default settings, but still inferior to
