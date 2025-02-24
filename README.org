@@ -1,6 +1,110 @@
 #+TITLE: ox-beamer-lecture.el - Org Export Backend for Beamer Lectures
 #+AUTHOR: Felix J. Esser
 
-The ox-beamer-lecture backend provides an Emacs org mode backend based on the
-ox-beamer backend to provide a convenient opportunity to use beamer's lecture
+The ox-beamer-lecture backend provides an Emacs [[https://orgmode.org/manual/Exporting.html][org mode export]] backend based on the
+[[https://orgmode.org/manual/Beamer-Export.html][ox-beamer]] backend to provide a convenient way to use [[https://mirrors.ibiblio.org/pub/mirrors/CTAN/macros/latex/contrib/beamer/doc/beameruserguide.pdf][beamer's]] lecture
 capabilities.
+
+* Concept
+
+*Starting Point*
+Org mode has a great capability to export to slides using the [[https://orgmode.org/manual/Beamer-Export.html][ox-beamer]] export backend. However, when creating a lecture (series of beamer slides) in org mode nuisances can appear. It is convenient to have all lectures in one org file, that is each level 1 heading constitutes a part of the lecture. In this case, a separate =:EXPORT_FILE:= property needs to be set for each part. When creating a handout file via beamer's =handout= documentclass option, it needs to be set for each lecture part and the export needs to be rerun. Further, it is handy if the slides (beamer and handout version) of each lecture part are exported into a separate folder so that the project folder won't be cluttered. Lastly, in some occasions it is useful to create a combined document of all parts of the lecture. In principle, this could be achieved via the standard LaTeX export, but then the Beamer properties (e.g., =:BEAMER_ENV: note=) are not processed properly.
+
+*ox-beamer-lecture*
+The ox-beamer-lecture backend solves these problems. It makes use of beamer's =\lecture= command to create a series of beamer slides. By default, each level 1 heading in an org file is considered a part of a lecture. For each part, ox-beamer-lecture creates a folder during export which is named according to the corresponding heading. Within each folder, beamer slides (with overlays) and handout slides (without overlays) are created. In this way, ox-beamer-lecture provides a more convenient usage of the standard beamer export for creating series of slides. By extending the beamer export backend, the usual options for the beamer backend work as well.
+
+Additionally, ox-beamer-lecture implements the =article= mode feature of the beamer package. Via article mode it is possible to export the whole lecture as one document. This can be used to create a script for a course. While exporting to the article version, the different beamer properties are adequately processed. It is also possible to include extra content in the article version. 
+
+I hope you find this package useful. While creating lectures for a university course, I found this export functionality quite helpful. I created a commented demo =demo-ox-beamer-lecture.org= in this repository which and shows how to use several features.
+
+* Usage
+
+Several export functions are available which can be called on the current buffer using the standard =org-export-dispatch= function (=C-c C-e=). The export prefix for the ox-beamer-lecture backend is =L=.
+
+A) Exporting to slides
+   - For exporting functions exporting to slides (except the one which exports solely to a buffer), the functions prompt which part of the lecture should be exported. If the number 0 is given, all parts will be processed
+   - =L L=
+     - Export the body of the lecture to a buffer.
+   - =L l=
+     - Export the body of the lecture to a latex file, create a folder for the corresponding lecture, and export the beamer and handout slide tex files
+   - =L p=
+     - The same as =L l= but in addition it compiles the beamer and handout tex files to pdf files.
+   - =L o=
+     - The same as =L p= but in addition it opens the beamer pdf file.
+     - If all parts of the lectures are processed, it opens the beamer file of the last processed file.
+   - =L f=
+     - This is a fast version of the export function.
+     - Compilation of the beamer files can take up time, so this function speeds up the process if the desire is to quickly see rough changes.
+     - It differs from the normal export version by (1) creating only the beamer and omitting the handout files, (2) disabling =#+INCLUDE= keywords, (3) disabling source code blocks, and (4) running =pdflatex= as the compiler so the file is only compiled once.
+   - =L F=
+     - The same as =L f= but in addition it opens the beamer pdf file.
+B) Exporting to article mode
+   - If the article mode export is written to the file, the path of the file depends on =org-beamer-lecture-article-dir= and the file name depends on =org-beamer-lecture-article-suffix=
+   - =L A=
+     - Export the lecture in article mode to a buffer in order to create one LaTeX file of the whole lecture.
+   - =L a=
+     - The same as =L A= but write it to a LaTeX file.
+   - =L P=
+     - Export the lecture in article mode to a pdf file in order to create one document of the whole lecture.
+   - =L O=
+     - The same as =L P= but in addition it opens the pdf file.
+
+
+Further usage notes
+- Date for each lecture part
+  - It is possible to set different dates for different parts of the lecture.
+  - Set the =:EXPORT_DATE:= property for the heading that constitutes the lecture part (by default level 1 heading).
+- Mode dependent content
+  - It is possible to include content only for specific modes.
+  - Use the =:noarticle:= tag (=org-beamer-lecture-article-exclude-tag=) to exclude content from the article version that should still be exported to slides. For example, use this for an introductory lecture that should not be included in the article version.
+  - Use the =:BEAMER_env: ignoreheading= property for a heading to include content that is not enclosed by a frame environment during export and thus only appears in the article version but not in the slides. For example, use this for additional information in the article version.
+  - Use the =:BEAMER_ACT: beamer= property for a heading to specify that this content should only appear in the beamer version but not in the handout or article version. Similarly, it is also possible to choose =handout=, =article=, or =presentation= (every mode except article mode).
+  - See the =demo-ox-beamer-lecture.org= file for examples.
+- Naming of files and lectures
+  - The naming of the labels in files and lectures can be configured. See the configuration section below.
+
+* Configuration
+
+The following configuration variables are available. =d:= stands for the default value.
+
+- Overall Settings
+  - =org-beamer-lecture-frame-level=
+    - The level at which headlines become frames.
+    - d: 3
+    - In-buffer setting: =#+OPTIONS: H:N=, where =N= is an integer.
+- Slides Settings
+  - =org-beamer-lecture-require-lecture=
+    - Whether to prompt for a lecture number during export. If nil, process always all lecture files and do not prompt.
+    - d: t
+  - =org-beamer-lecture-list-default-overlay=
+    - Default overlay specification for level 1 list environments. Set it to "+-" to enable piece wise uncovering for level 1 items.
+    - d: ""
+  - =org-beamer-lecture-label=
+    - Label for the =\lecture{TITLE}{LABEL}= command which is used for folder and file name creation.
+    - d: "lecture"
+    - In-buffer setting: =#+BEAMER_LECTURE_LABEL:=
+  - =org-beamer-lecture-beamer-suffix=
+    - File name suffix for beamer files.
+    - d: "-beamer"
+  - =org-beamer-lecture-handout-suffix=
+    - File name suffix for handout files.
+    - d: nil
+- Article Mode Settings
+  - =org-beamer-lecture-article-exclude-tag=
+    - Tag to exclude trees for article mode export.
+    - d: "noarticle"
+  - =org-beamer-lecture-article-dir=
+    - Folder in which the article mode version is saved.
+    - d: "article"
+  - =org-beamer-lecture-article-suffix=
+    - Suffix for the created article files.
+    - d: "-article"
+  - =org-beamer-lecture-article-label=
+    - Lecture label in article mode which will be used as chapter name.
+    - d: nil
+      - Capitalized value of =org-beamer-lecture-label= is used.
+    - In-buffer setting: =#+BEAMER_LECTURE_ARTICLE_LABEL:=
+  - =org-beamer-lecture-article-rename-chapter=
+    - Whether to insert a =\renewcommand{\chaptername}{LABEL}= line during article export. LABEL depends on =org-beamer-lecture-article-label=.
+    - In-buffer setting: =#+OPTIONS: rch: t=
+    - If nil, the variable =org-beamer-lecture-article-label= has no effect.
