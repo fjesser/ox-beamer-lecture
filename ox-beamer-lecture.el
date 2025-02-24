@@ -97,9 +97,9 @@ with the in-buffer setting `#+BEAMER_LECTURE_LABEL'."
   "Whether to insert the overall lecture title as a subtitle in the slides.
 
 The slides' title will be the lecture part's heading. If t, the
-`#+TITLE' value will be inserted as the subtitle. When the
-in-buffer setting `#+SUBTITLE:' is set, this variable has no
-effect."
+`#+TITLE' value will be inserted as the subtitle and for the
+slides export it will overwrite any in-buffer setting set with
+`#+SUBTITLE:'."
   :type 'org-export-beamer-lecture
   :type 'boolean)
 
