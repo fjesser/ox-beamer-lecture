@@ -93,6 +93,16 @@ with the in-buffer setting `#+BEAMER_LECTURE_LABEL'."
   :group 'org-export-beamer-lecture
   :type 'string)
 
+(defcustom org-beamer-lecture-title-as-subtitle t
+  "Whether to insert the overall lecture title as a subtitle in the slides.
+
+The slides' title will be the lecture part's heading. If t, the
+`#+TITLE' value will be inserted as the subtitle. When the
+in-buffer setting `#+SUBTITLE:' is set, this variable has no
+effect."
+  :type 'org-export-beamer-lecture
+  :type 'boolean)
+
 (defcustom org-beamer-lecture-beamer-suffix "-beamer"
   "Suffix for beamer presentation files.
 
@@ -577,13 +587,20 @@ is no template available."
     (while (< index (length lecture-labels))
       (let* ((lecture (nth index lecture-labels))
              (label (car lecture))
-             (title (org-beamer-lecture--transform-title (cdr lecture))))
+             (title (cdr lecture))
+             (title-dir (org-beamer-lecture--transform-title title)))
         (when (or (= org-beamer-lecture--lecture-number 0)
                   (= (1- org-beamer-lecture--lecture-number) index))
+          ;; Use overall title for subtitle
+          (when org-beamer-lecture-title-as-subtitle
+            (plist-put info :subtitle (plist-get info :title)))
+          ;; Use lecture title for lecture and remove latex code
+          (plist-put info :title (org-beamer-lecture-remove-latex
+                                  title))
           ;; Use EXPORT_DATE property of lecture
           (plist-put info :date `(,(nth index org-beamer-lecture--dates)))
           ;; Create and process tex files
-          (let* ((outdir (concat label "-" title))
+          (let* ((outdir (concat label "-" title-dir))
                  (base-outfile (file-name-concat outdir outdir))
                  (beamer-texfile (concat base-outfile
                                          org-beamer-lecture-beamer-suffix
