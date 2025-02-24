@@ -67,44 +67,47 @@ Further usage notes
 
 The following configuration variables are available. =d:= stands for the default value.
 
-- Overall Settings
-  - =org-beamer-lecture-frame-level=
-    - The level at which headlines become frames.
-    - d: 3
-    - In-buffer setting: =#+OPTIONS: H:N=, where =N= is an integer.
-- Slides Settings
-  - =org-beamer-lecture-require-lecture=
-    - Whether to prompt for a lecture number during export. If nil, process always all lecture files and do not prompt.
-    - d: t
-  - =org-beamer-lecture-list-default-overlay=
-    - Default overlay specification for level 1 list environments. Set it to "+-" to enable piece wise uncovering for level 1 items.
-    - d: ""
-  - =org-beamer-lecture-label=
-    - Label for the =\lecture{TITLE}{LABEL}= command which is used for folder and file name creation.
-    - d: "lecture"
-    - In-buffer setting: =#+BEAMER_LECTURE_LABEL:=
-  - =org-beamer-lecture-beamer-suffix=
-    - File name suffix for beamer files.
-    - d: "-beamer"
-  - =org-beamer-lecture-handout-suffix=
-    - File name suffix for handout files.
-    - d: nil
-- Article Mode Settings
-  - =org-beamer-lecture-article-exclude-tag=
-    - Tag to exclude trees for article mode export.
-    - d: "noarticle"
-  - =org-beamer-lecture-article-dir=
-    - Folder in which the article mode version is saved.
-    - d: "article"
-  - =org-beamer-lecture-article-suffix=
-    - Suffix for the created article files.
-    - d: "-article"
-  - =org-beamer-lecture-article-label=
-    - Lecture label in article mode which will be used as chapter name.
-    - d: nil
-      - Capitalized value of =org-beamer-lecture-label= is used.
-    - In-buffer setting: =#+BEAMER_LECTURE_ARTICLE_LABEL:=
-  - =org-beamer-lecture-article-rename-chapter=
-    - Whether to insert a =\renewcommand{\chaptername}{LABEL}= line during article export. LABEL depends on =org-beamer-lecture-article-label=.
-    - In-buffer setting: =#+OPTIONS: rch: t=
-    - If nil, the variable =org-beamer-lecture-article-label= has no effect.
+A) Overall Settings
+   - =org-beamer-lecture-frame-level=
+     - The level at which headlines become frames.
+     - d: 3
+     - In-buffer setting: =#+OPTIONS: H:N=, where =N= is an integer.
+B) Slides Settings
+   - =org-beamer-lecture-require-lecture=
+     - Whether to prompt for a lecture number during export. If nil, process always all lecture files and do not prompt.
+     - d: t
+   - =org-beamer-lecture-list-default-overlay=
+     - Default overlay specification for level 1 list environments. Set it to "+-" to enable piece wise uncovering for level 1 items.
+     - d: ""
+   - =org-beamer-lecture-label=
+     - Label for the =\lecture{TITLE}{LABEL}= command which is used for folder and file name creation.
+     - d: "lecture"
+     - In-buffer setting: =#+BEAMER_LECTURE_LABEL:=
+   - =org-beamer-lecture-title-as-subtitle=
+     - Whether to use =#+TITLE= as subtitle in slides export. Title in slides is the heading of lecture part.
+     - d: t
+   - =org-beamer-lecture-beamer-suffix=
+     - File name suffix for beamer files.
+     - d: "-beamer"
+   - =org-beamer-lecture-handout-suffix=
+     - File name suffix for handout files.
+     - d: nil
+C) Article Mode Settings
+   - =org-beamer-lecture-article-exclude-tag=
+     - Tag to exclude trees for article mode export.
+     - d: "noarticle"
+   - =org-beamer-lecture-article-dir=
+     - Folder in which the article mode version is saved.
+     - d: "article"
+   - =org-beamer-lecture-article-suffix=
+     - Suffix for the created article files.
+     - d: "-article"
+   - =org-beamer-lecture-article-label=
+     - Lecture label in article mode which will be used as chapter name.
+     - d: nil
+       - Capitalized value of =org-beamer-lecture-label= is used.
+     - In-buffer setting: =#+BEAMER_LECTURE_ARTICLE_LABEL:=
+   - =org-beamer-lecture-article-rename-chapter=
+     - Whether to insert a =\renewcommand{\chaptername}{LABEL}= line during article export. LABEL depends on =org-beamer-lecture-article-label=.
+     - In-buffer setting: =#+OPTIONS: rch: t=
+     - If nil, the variable =org-beamer-lecture-article-label= has no effect.
