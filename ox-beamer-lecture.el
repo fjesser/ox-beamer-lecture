@@ -19,13 +19,15 @@
 
 (require 'ox-beamer)
 
-;; Create special LaTeX beamer lecture class
-;; It uses format-spec templates for the expansion of %h handout and %l lecture label
-;; within the org-beamer-lecture-template function
+;; Create special LaTeX beamer lecture class It uses format-spec templates for
+;; the expansion of %h handout and %l lecture label within the
+;; org-beamer-lecture-template function. Appendix is redefined because using
+;; lectures only the first \appendix is respected.
 (add-to-list 'org-latex-classes
              '("beamer-lecture"
                "\\documentclass[compress,ignorenonframetext%h]{beamer}
-\\includeonlylecture{%l}"
+\\includeonlylecture{%l}
+\\renewcommand<>{\\appendix}{\\part#1{\\appendixname}}"
                org-beamer-lecture--compute-headings))
 ;; Create class for beamer's article mode export
 (add-to-list 'org-latex-classes
