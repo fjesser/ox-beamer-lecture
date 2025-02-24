@@ -388,8 +388,8 @@ was compiled or raise an error if it couldn't be produced."
     ;; --- LaTeX Export Settings
     (:latex-class "LATEX_CLASS" nil "beamer-lecture" nil)
     ;; --- Beamer Export Settings
-    (:headline-levels nil "H" org-beamer-lecture-frame-level)
     ;; --- Beamer Lecture Export Settings
+    (:headline-levels nil "H" org-beamer-lecture-frame-level)
     (:beamer-lecture-label "BEAMER_LECTURE_LABEL" nil org-beamer-lecture-label))
   :translate-alist
   '((headline . org-beamer-lecture-headline)
@@ -416,6 +416,7 @@ was compiled or raise an error if it couldn't be produced."
     ;; --- LaTeX Export Settings
     (:latex-class "LATEX_CLASS" nil "beamer-lecture-article" nil)
     ;; --- Beamer Lecture Article Export Settings
+    (:headline-levels nil "H" org-beamer-lecture-frame-level)
     (:beamer-lecture-label "BEAMER_LECTURE_LABEL" nil org-beamer-lecture-label)
     (:beamer-lecture-article-rename-chapter nil "rch" org-beamer-lecture-article-rename-chapter)
     (:beamer-lecture-article-label "BEAMER_LECTURE_ARTICLE_LABEL" nil
