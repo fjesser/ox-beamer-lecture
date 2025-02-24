@@ -270,27 +270,38 @@ This function is used in the export functions."
       0
     (read-number "Number of lecture to process (0 for all): ")))
 
+(defun org-beamer-lecture-remove-latex (string)
+  "Remove LaTeX code from a STRING and strip whitespace.
+
+First, remove LaTeX commands without the braces, then remove the
+braces with their content, and lastly remove leading and trailing
+whitespace."
+  (let ((replacements
+        '(("\\\\\\w+" . "")
+          ("{[^}]*}" . "")
+          ("^[[:space:]]*\\(.*?\\)[[:space:]]*$" . "\\1"))))
+    (seq-reduce '(lambda (string replacement-pair)
+                   (replace-regexp-in-string
+                    (car replacement-pair)
+                    (cdr replacement-pair)
+                    string))
+                replacements
+                string)))
+
 (defun org-beamer-lecture--transform-title (title)
   "Transform TITLE string to directory name.
 
 Steps
-1) Remove LaTeX commands without braces
-2) Remove braces with their content
-3) Trim leading and trailing whitespace
-4) Remove any latex commands
-5) Replace Roman numerals with numbers at the end of the string
-6) Replace dashes surrounded by whitespace with dash
-7) Replace whitespace with dash
-8) Downcase all characters"
+1) Remove LaTeX code and strip whitespace
+2) Replace Roman numerals with numbers at the end of the string
+3) Replace dashes surrounded by whitespace with dash
+4) Replace whitespace with dash
+5) Downcase all characters"
   (let ((replacements                   ; Order of replacements matters
-         '(("\\\\\\w+" . "")            ; 1)
-           ("{[^}]*}" . "")             ; 2)
-           ("^[[:space:]]*\\(.*?\\)[[:space:]]*$" . "\\1") ; 3)
-           ("III$" . "3") ("II$" . "2") ("I$" . "1")       ; 4) Order matters
+         '(("III$" . "3") ("II$" . "2") ("I$" . "1")
            ("IV$". "4") ("V$" . "5" )
-           ("[[:space:]]+-+[[:space:]]+" . "-")            ; 5)
-           ("[[:space:]]+" . "-")                          ; 6)
-           )))
+           ("[[:space:]]+-+[[:space:]]+" . "-")
+           ("[[:space:]]+" . "-"))))
     (downcase
      (seq-reduce '(lambda (title replacement-pair)
                      (replace-regexp-in-string
@@ -298,7 +309,7 @@ Steps
                       (cdr replacement-pair)
                       title))
                  replacements
-                 title))))
+                 (org-beamer-lecture-remove-latex title)))))
 
 (defun org-beamer-lecture--compile (_body-texfile &optional snippet)
   "Compile Beamer Lecture TeX files.
