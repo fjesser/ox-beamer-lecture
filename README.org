@@ -1,0 +1,6 @@
+#+TITLE: ox-beamer-lecture.el - Org Export Backend for Beamer Lectures
+#+AUTHOR: Felix J. Esser
+
+The ox-beamer-lecture backend provides an Emacs org mode backend based on the
+ox-beamer backend to provide a convenient opportunity to use beamer's lecture
+capabilities.
