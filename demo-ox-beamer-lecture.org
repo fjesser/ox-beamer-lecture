@@ -1,0 +1,133 @@
+# -*- org-export-initial-scope: 'buffer; org-num-skip-tags: '("noexport"); -*-
+#+TITLE: Title of Lecture
+#+STARTUP: num
+# Settings for beamer and handout slides
+# Label for folder and files
+#+BEAMER_LECTURE_LABEL: lecture
+# Show notes in beamer mode
+#+BEAMER_HEADER: \mode<beamer>{\setbeameroption{show notes on second screen=right}}
+
+# Settings for article mode
+# Redefine chaptername
+# #+BEAMER_LECTURE_ARTICLE_LABEL: Session
+# Do not include a redefinition of the chaptername
+# You may want to use this if you use a different class for article mode
+# #+OPTIONS: rch:nil
+
+#+SUBTITLE: Something
+
+* Organization                                                     :noexport:
+
+This heading is for organizing the class/course. It won't be exported with =ox-beamer-lecture=. For example, the syllabus could be put here and be exported separately.
+
+* Welcome                                                         :noarticle:
+:PROPERTIES:
+:EXPORT_DATE: <2025-01-01 Wed>
+:END:
+
+** Section 1
+
+*** Frame 1
+
+- This lecture will be exported to slides (presentation and handout)
+- It won't be exported in article mode
+- This can be used for introductory lectures which are presented using slides but should not appear in the article/script of the course, which should only contain content
+
+
+**** Notes                                                      :B_noteNH:
+:PROPERTIES:
+:BEAMER_env: noteNH
+:END:
+
+Some note for the first frame.
+
+*** Personal Information About the Instructor - Only beamer mode
+:PROPERTIES:
+:BEAMER_ACT: beamer
+:END:
+
+This information is only included in the beamer slides and is not included in the handout or in the article version. This can be used to select content for specific versions. Of course it is also possible to include content only for other modes. Just adjust =:BEAMER_ACT:= to the corresponding mode. See also the information on modes in the [[https://mirrors.ibiblio.org/pub/mirrors/CTAN/macros/latex/contrib/beamer/doc/beameruserguide.pdf][Beamer Userguide]]. 
+
+** Appendix                                                    :B_appendix:
+:PROPERTIES:
+:BEAMER_env: appendix
+:END:
+
+*** Appendix Frame
+
+This is an appendix frame. 
+
+* Content 1
+:PROPERTIES:
+:EXPORT_DATE: <2025-02-01 Sat>
+:END:
+
+** L2 - Section 1
+
+*** Frame 1
+
+Hello World!
+
+When a timestamp is set in the =:EXPORT_DATE:= property of the lecture parts, it will be formatted according to =org-export-date-timestamp-format= during export.
+
+**** Notes                                                      :B_noteNH:
+:PROPERTIES:
+:BEAMER_env: noteNH
+:END:
+
+- This is a note for the frame
+
+** Text only in article mode :B_ignoreheading:
+:PROPERTIES:
+:BEAMER_env: ignoreheading
+:END:
+
+Selecting the beamer property/tag =B_ignoreheading= using =org-beamer-select-environment=, enables to include text that should only appear in article mode. This is possible because the documentclass option =ignorenonframetext= is used for the presentation slides.
+
+** L2 - Section 2
+
+*** Frame with Columns
+
+**** Col1 :B_column:
+:PROPERTIES:
+:BEAMER_env: column
+:BEAMER_COL: 0.5
+:END:
+
+Columns can be used with the normal org-beamer syntax.
+
+**** Col2 :B_column:
+:PROPERTIES:
+:BEAMER_COL: 0.5
+:BEAMER_env: column
+:END:
+
+Another column for demonstrational purposes.
+
+* Content 2
+:PROPERTIES:
+:EXPORT_DATE: Some custom date
+:END:
+
+** L3 - Section 1
+
+*** L3.1 Subsection 1
+
+**** Frame in Subsection :B_frame:
+:PROPERTIES:
+:BEAMER_env: frame
+:END:
+
+A frame in a subsection
+
+*** L3.1 Subsection 2
+
+**** Frame in Subsection                                         :B_frame:
+:PROPERTIES:
+:BEAMER_env: frame
+:END:
+
+***** With a Block
+
+Amazing!
+
