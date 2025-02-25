@@ -182,6 +182,17 @@ for the time of the export."
   :group 'org-export-beamer-lecture-article
   :type 'string)
 
+(defcustom org-beamer-lecture-article-par-spacing
+  "\\setlength{\\parindent}{0pt}
+\\setlength{\\parskip}{2pt plus 1pt}"
+  "Paragraph spacing setting for article mode.
+
+By default, the report class is used when exporting to the article
+version and the paragraph spacing needs to be adjusted. Set to nil, to
+disable it."
+  :group 'org-export-beamer-lecture-article
+  :type 'string)
+
 
 ;;; Internal Variables
 
@@ -685,8 +696,8 @@ plist holding export options."
                   (delq nil `(,(plist-get info :beamer-header)
                               ,renewcommand))
                   "\n"))))
-  ;; org-beamer-template code is edited because toc is set without frame env
-  ;; and titlecommand needs empty pagestyle
+  ;; org-beamer-template code is edited: set toc without frame env,
+  ;; add empty pagestyle for titlecommand, and set paragraph spacing
   (let ((title (org-export-data (plist-get info :title) info))
 	    (subtitle (org-export-data (plist-get info :subtitle) info))
         (org-latex-title-command (concat "\\pagestyle{empty}\n"
@@ -742,6 +753,9 @@ plist holding export options."
      (format "\\title{%s}\n" title)
      (when (org-string-nw-p subtitle)
        (concat (format (plist-get info :beamer-subtitle-format) subtitle) "\n"))
+     ;; Paragraph spacing
+     (when org-beamer-lecture-article-par-spacing
+       (concat org-beamer-lecture-article-par-spacing "\n"))
      ;; Beamer-header
      (let ((beamer-header (plist-get info :beamer-header)))
        (when beamer-header
