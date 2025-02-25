@@ -4,9 +4,9 @@
 
 ;; Author: Felix J. Esser <code-esser@mailbox.org>
 ;; Maintainer: Felix J. Esser <code-esser@mailbox.org>
-;; URL https://github.com/fjesser/ox-beamer-lecture;; Created: 2025
+;; URL: https://github.com/fjesser/ox-beamer-lecture;; Created: 2025
 ;; Version: 1.0
-;; Package-Requires: ((emacs "26.1") (org "9.6"))
+;; Package-Requires: ((emacs "29.1"))
 ;; Keywords: org, text, tex
 
 ;; This file is NOT part of GNU Emacs.
