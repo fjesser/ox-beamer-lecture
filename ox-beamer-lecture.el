@@ -685,48 +685,104 @@ plist holding export options."
                   (delq nil `(,(plist-get info :beamer-header)
                               ,renewcommand))
                   "\n"))))
-  (plist-put info :file (concat "article/"
-                                (plist-get info :file)))
-  (org-beamer-template contents info))
+  ;; org-beamer-template code is edited because toc is set without frame env
+  ;; and titlecommand needs empty pagestyle
+  (let ((title (org-export-data (plist-get info :title) info))
+	    (subtitle (org-export-data (plist-get info :subtitle) info))
+        (org-latex-title-command (concat "\\pagestyle{empty}\n"
+                                         org-latex-title-command)))
+    (concat
+     ;; Timestamp.
+     (and (plist-get info :time-stamp-file)
+	      (format-time-string "%% Created %Y-%m-%d %a %H:%M\n"))
+     ;; LaTeX compiler
+     (org-latex--insert-compiler info)
+     ;; Document class and packages.
+     (org-latex-make-preamble info)
+     ;; Define the alternative frame environment, if needed.
+     (when (plist-get info :beamer-define-frame)
+       (format "\\newenvironment<>{%s}[1][]{\\begin{frame}#2[environment=%1$s,#1]}{\\end{frame}}\n"
+               org-beamer-frame-environment))
+     ;; Insert themes.
+     (let ((format-theme
+	        (lambda (prop command)
+	          (let ((theme (plist-get info prop)))
+		        (when theme
+		          (concat command
+			              (if (not (string-match "\\[.*\\]" theme))
+			                  (format "{%s}\n" theme)
+			                (format "%s{%s}\n"
+				                    (match-string 0 theme)
+				                    (org-trim
+				                     (replace-match "" nil nil theme))))))))))
+       (mapconcat (lambda (args) (apply format-theme args))
+		          '((:beamer-theme "\\usetheme")
+		            (:beamer-color-theme "\\usecolortheme")
+		            (:beamer-font-theme "\\usefonttheme")
+		            (:beamer-inner-theme "\\useinnertheme")
+		            (:beamer-outer-theme "\\useoutertheme"))
+		          ""))
+     ;; Possibly limit depth for headline numbering.
+     (let ((sec-num (plist-get info :section-numbers)))
+       (when (integerp sec-num)
+	     (format "\\setcounter{secnumdepth}{%d}\n" sec-num)))
+     ;; Author.
+     (let ((author (and (plist-get info :with-author)
+			            (let ((auth (plist-get info :author)))
+			              (and auth (org-export-data auth info)))))
+	       (email (and (plist-get info :with-email)
+		               (org-export-data (plist-get info :email) info))))
+       (cond ((and author email (not (string= "" email)))
+	          (format "\\author{%s\\thanks{%s}}\n" author email))
+	         ((or author email) (format "\\author{%s}\n" (or author email)))))
+     ;; Date.
+     (let ((date (and (plist-get info :with-date) (org-export-get-date info))))
+       (format "\\date{%s}\n" (org-export-data date info)))
+     ;; Title
+     (format "\\title{%s}\n" title)
+     (when (org-string-nw-p subtitle)
+       (concat (format (plist-get info :beamer-subtitle-format) subtitle) "\n"))
+     ;; Beamer-header
+     (let ((beamer-header (plist-get info :beamer-header)))
+       (when beamer-header
+	     (format "%s\n" (plist-get info :beamer-header))))
+     ;; 9. Hyperref options.
+     (let ((template (plist-get info :latex-hyperref-template)))
+       (and (stringp template)
+	        (format-spec template (org-latex--format-spec info))))
+     ;; engrave-faces-latex preamble
+     (when (and (eq (plist-get info :latex-src-block-backend) 'engraved)
+                (org-element-map (plist-get info :parse-tree)
+                    '(src-block inline-src-block) #'identity
+                    info t))
+       (org-latex-generate-engraved-preamble info))
+     ;; Document start.
+     "\\begin{document}\n\n"
+     ;; Title command.
+     (org-element-normalize-string
+      (cond ((not (plist-get info :with-title)) nil)
+	        ((string= "" title) nil)
+	        ((not (stringp org-latex-title-command)) nil)
+	        ((string-match "\\(?:[^%]\\|^\\)%s"
+			               org-latex-title-command)
+	         (format org-latex-title-command title))
+	        (t org-latex-title-command)))
+     ;; Table of contents.
+     (let ((depth (plist-get info :with-toc)))
+       (when depth
+	     (concat                    ; Removed frame environment for article mode
+	      (when (wholenump depth)
+	        (format "\\setcounter{tocdepth}{%d}\n" depth))
+	      "\\tableofcontents\n\n")))
+     ;; Document's body.
+     contents
+     ;; Creator.
+     (if (plist-get info :with-creator)
+	     (concat (plist-get info :creator) "\n")
+       "")
+     ;; Document end.
+     "\\end{document}")))
 
-
-;;; Commands
-
-;;;###autoload
-(defun org-beamer-lecture-export-as-latex
-    (&optional async subtreep visible-only body-only ext-plist)
-  "Export current buffer as body of Beamer Lecture buffer.
-If narrowing is active in the current buffer, only export its
-narrowed part.
-
-If a region is active, export that region.
-
-A non-nil optional argument ASYNC means the process should happen
-asynchronously.  The resulting buffer should be accessible
-through the `org-export-stack' interface.
-
-When optional argument SUBTREEP is non-nil, export the sub-tree
-at point, extracting information from the headline properties
-first.
-
-When optional argument VISIBLE-ONLY is non-nil, don't export
-contents of hidden elements.
-
-The optional argument BODY-ONLY does not have any effect. Only
-the body is exported because the code outside
-\"\\begin{document}\" and \"\\end{document}\" is by design
-included in other files.
-
-EXT-PLIST, when provided, is a property list with external
-parameters overriding Org default settings, but still inferior to
-file-local settings.
-
-Export is done in a buffer named \"*Org BEAMER Export*\", which
-will be displayed when `org-export-show-temporary-export-buffer'
-is non-nil."
-  (interactive)
-  (org-export-to-buffer 'beamer-lecture "*Org BEAMER LECTURE Export*"
-    async subtreep visible-only body-only ext-plist (lambda () (LaTeX-mode))))
 
 ;;;###autoload
 (defun org-beamer-lecture-export-to-latexs
