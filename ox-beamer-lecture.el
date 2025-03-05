@@ -700,7 +700,7 @@ plist holding export options."
   ;; add empty pagestyle for titlecommand, and set paragraph spacing
   (let ((title (org-export-data (plist-get info :title) info))
 	    (subtitle (org-export-data (plist-get info :subtitle) info))
-        (org-latex-title-command (concat "\\pagestyle{empty}\n"
+        (org-latex-title-command (concat "\\thispagestyle{empty}\n"
                                          org-latex-title-command)))
     (concat
      ;; Timestamp.
