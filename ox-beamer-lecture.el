@@ -670,7 +670,7 @@ is no template available."
   ;; Only output contents, previous code is for side effects
   (concat
    (when (plist-get info :time-stamp-file)
-     (format-time-string "%% Created %Y-%m-%d %a %H:%M by org-beamer-lecture.el\n"))
+     (format-time-string "%% Created %F %a %R by org-beamer-lecture.el\n"))
    contents))
 
 ;;;; Template - Article
@@ -705,7 +705,7 @@ plist holding export options."
     (concat
      ;; Timestamp.
      (and (plist-get info :time-stamp-file)
-	      (format-time-string "%% Created %Y-%m-%d %a %H:%M\n"))
+	      (format-time-string "%% Created %F %a %R\n"))
      ;; LaTeX compiler
      (org-latex--insert-compiler info)
      ;; Document class and packages.
