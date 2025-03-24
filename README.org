@@ -24,7 +24,7 @@ I hope you find this package useful. While creating lectures for a university co
 
  I created a commented demo in this repository: =demo-ox-beamer-lecture.org=. You can download it to see and try out the different features of =ox-beamer-lecture=. To give an overview, it creates the following folders and files based on =demo-ox-beamer-lecture.org=. The names of the folders and files for the slides, =lectureNN-*=, are automatically named according to the level 1 headings in the org file. For each lecture part, a presentation file (=-beamer.pdf=) and a handout file is created. Lastly, the article version is placed in a separate folder.
 
- #+begin_src bash :results output :eval never
+ #+begin_src bash :results output :eval never :exports results
    tree . -P "demo*org|lecture*|*article*" -I "*~"
  #+end_src
 
