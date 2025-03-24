@@ -1,5 +1,6 @@
-# -*- org-export-initial-scope: 'buffer; org-num-skip-tags: '("noexport"); -*-
+# -*- org-export-initial-scope: 'buffer; org-num-skip-tags: ("noexport"); -*-
 #+TITLE: Title of Lecture
+#+SUBTITLE: Subtitle Shown in Article Version
 #+STARTUP: num
 # Settings for beamer and handout slides
 # Label for folder and files
@@ -13,8 +14,6 @@
 # Do not include a redefinition of the chaptername
 # You may want to use this if you use a different class for article mode
 # #+OPTIONS: rch:nil
-
-#+SUBTITLE: Something
 
 * Organization                                                     :noexport:
 
