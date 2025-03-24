@@ -24,36 +24,38 @@ I hope you find this package useful. While creating lectures for a university co
 
 Several export functions are available which can be called on the current buffer using the standard =org-export-dispatch= function (=C-c C-e=). The export prefix for the ox-beamer-lecture backend is =L=.
 
-A) Exporting to slides
-   - For exporting functions exporting to slides (except the one which exports solely to a buffer), the functions prompt which part of the lecture should be exported. If the number 0 is given, all parts will be processed
-   - =L L=
-     - Export the body of the lecture to a buffer.
-   - =L l=
-     - Export the body of the lecture to a latex file, create a folder for the corresponding lecture, and export the beamer and handout slide tex files
-   - =L p=
-     - The same as =L l= but in addition it compiles the beamer and handout tex files to pdf files.
-   - =L o=
-     - The same as =L p= but in addition it opens the beamer pdf file.
-     - If all parts of the lectures are processed, it opens the beamer file of the last processed file.
-   - =L f=
-     - This is a fast version of the export function.
-     - Compilation of the beamer files can take up time, so this function speeds up the process if the desire is to quickly see rough changes.
-     - It differs from the normal export version by (1) creating only the beamer and omitting the handout files, (2) disabling =#+INCLUDE= keywords, (3) disabling source code blocks, and (4) running =pdflatex= as the compiler so the file is only compiled once.
-   - =L F=
-     - The same as =L f= but in addition it opens the beamer pdf file.
-B) Exporting to article mode
-   - If the article mode export is written to the file, the path of the file depends on =org-beamer-lecture-article-dir= and the file name depends on =org-beamer-lecture-article-suffix=
-   - =L A=
-     - Export the lecture in article mode to a buffer in order to create one LaTeX file of the whole lecture.
-   - =L a=
-     - The same as =L A= but write it to a LaTeX file.
-   - =L P=
-     - Export the lecture in article mode to a pdf file in order to create one document of the whole lecture.
-   - =L O=
-     - The same as =L P= but in addition it opens the pdf file.
+** Exporting to slides
+- Exporting functions that export to slides (except the one which exports solely to a buffer) prompt which part of the lecture should be exported. If the number 0 is given, all parts will be processed
+- =L L=
+  - Export the body of the lecture to a buffer.
+- =L l=
+  - Export the body of the lecture to a latex file, create a folder for the corresponding lecture, and export the beamer and handout slide tex files
+- =L p=
+  - The same as =L l= but in addition it compiles the beamer and handout tex files to pdf files.
+- =L o=
+  - The same as =L p= but in addition it opens the beamer pdf file.
+  - If all parts of the lectures are processed, it opens the beamer file of the last processed file.
+- =L f=
+  - This is a fast version of the export function.
+  - Compilation of the beamer files can take up time, so this function speeds up the process if the desire is to quickly see rough changes.
+  - It differs from the normal export version by (1) creating only the beamer and omitting the handout files, (2) disabling =#+INCLUDE= keywords, (3) disabling source code blocks, and (4) running =pdflatex= as the compiler so the file is only compiled once.
+- =L F=
+  - The same as =L f= but in addition it opens the beamer pdf file.
+
+** Exporting to article mode
+- If the article mode export is written to the file, the path of the file depends on =org-beamer-lecture-article-dir= and the file name depends on =org-beamer-lecture-article-suffix=
+- =L A=
+  - Export the lecture in article mode to a buffer in order to create one LaTeX file of the whole lecture.
+- =L a=
+  - The same as =L A= but write it to a LaTeX file.
+- =L P=
+  - Export the lecture in article mode to a pdf file in order to create one document of the whole lecture.
+- =L O=
+  - The same as =L P= but in addition it opens the pdf file.
 
 
-Further usage notes
+** Further usage notes
+
 - Date for each lecture part
   - It is possible to set different dates for different parts of the lecture.
   - Set the =:EXPORT_DATE:= property for the heading that constitutes the lecture part (by default level 1 heading).
