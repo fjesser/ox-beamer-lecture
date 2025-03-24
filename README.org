@@ -8,7 +8,7 @@ The ox-beamer-lecture backend provides an Emacs [[https://orgmode.org/manual/Exp
 [[https://orgmode.org/manual/Beamer-Export.html][ox-beamer]] backend to provide a convenient way to use [[https://mirrors.ibiblio.org/pub/mirrors/CTAN/macros/latex/contrib/beamer/doc/beameruserguide.pdf][beamer's]] lecture
 capabilities.
 
-Feature Overview
+*Feature Overview*
 1) Use of beamer's =\lecture= command to create a series of beamer slides
    - By default, each level 1 heading in an org file is considered a part of a lecture.
 2) Automatic folder creation and naming of folders and files
@@ -148,7 +148,7 @@ The following configuration variables are available. =d:= stands for the default
   - Whether to prompt for a lecture number during export. If nil, process always all lecture files and do not prompt.
   - d: t
 - =org-beamer-lecture-title-as-subtitle=
-  - Whether to use =#+TITLE= as subtitle in slides export. Title in slides is the heading of lecture part.
+  - Whether to use =#+TITLE= as subtitle in slides export. In the slides, the title is the L1 heading of the lecture part.
   - d: t
 
 ** Article Mode Settings
