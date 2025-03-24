@@ -1,6 +1,9 @@
 #+TITLE: ox-beamer-lecture.el - Org Export Backend for Beamer Lectures
 #+AUTHOR: Felix J. Esser
 
+[[https://melpa.org/#/ox-beamer-lecture][file:https://melpa.org/packages/ox-beamer-lecture-badge.svg]]
+
+
 The ox-beamer-lecture backend provides an Emacs [[https://orgmode.org/manual/Exporting.html][org mode export]] backend based on the
 [[https://orgmode.org/manual/Beamer-Export.html][ox-beamer]] backend to provide a convenient way to use [[https://mirrors.ibiblio.org/pub/mirrors/CTAN/macros/latex/contrib/beamer/doc/beameruserguide.pdf][beamer's]] lecture
 capabilities.
