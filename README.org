@@ -8,10 +8,18 @@ The ox-beamer-lecture backend provides an Emacs [[https://orgmode.org/manual/Exp
 [[https://orgmode.org/manual/Beamer-Export.html][ox-beamer]] backend to provide a convenient way to use [[https://mirrors.ibiblio.org/pub/mirrors/CTAN/macros/latex/contrib/beamer/doc/beameruserguide.pdf][beamer's]] lecture
 capabilities.
 
+Feature Overview
+1) Use of beamer's =\lecture= command to create a series of beamer slides
+   - By default, each level 1 heading in an org file is considered a part of a lecture.
+2) Automatic folder creation and naming of folders and files
+3) Simultaneous export to beamer slides (with overlay) and handout slides (without overlays)
+4) Possible to use beamer's article mode
+   - Create one document of all lecture content
+
 * Concept
 
-*Starting Point*
-Org mode has a great capability to export to slides using the [[https://orgmode.org/manual/Beamer-Export.html][ox-beamer]] export backend. However, when creating a lecture (series of beamer slides) in org mode nuisances can appear. It is convenient to have all lectures in one org file, that is each level 1 heading constitutes a part of the lecture. In this case, a separate =:EXPORT_FILE:= property needs to be set for each part. When creating a handout file via beamer's =handout= documentclass option, it needs to be set for each lecture part and the export needs to be rerun. Further, it is handy if the slides (beamer and handout version) of each lecture part are exported into a separate folder so that the project folder won't be cluttered. Lastly, in some occasions it is useful to create a combined document of all parts of the lecture. In principle, this could be achieved via the standard LaTeX export, but then the Beamer properties (e.g., =:BEAMER_ENV: note=) are not processed properly.
+*Background*
+Org mode has a great capability to export to slides using the [[https://orgmode.org/manual/Beamer-Export.html][ox-beamer]] export backend. However, when creating a lecture (series of beamer slides) in org mode nuisances can appear. It is convenient to have all lectures in one org file, that is each level 1 heading constitutes a part of the lecture. In this case, a separate =:EXPORT_FILE:= property needs to be set for each part. When creating a handout file via beamer's =handout= documentclass option, it needs to be set for each lecture part and the export needs to be rerun. Further, it is handy if the slides of each lecture part are exported into a separate folder so that the project folder won't be cluttered. Lastly, in some occasions it is useful to create a combined document of all parts of the lecture. In principle, this could be achieved via the standard LaTeX export, but then the Beamer properties (e.g., =:BEAMER_ENV: note=) are not processed properly.
 
 *ox-beamer-lecture*
 The ox-beamer-lecture backend solves these problems. It makes use of beamer's =\lecture= command to create a series of beamer slides. By default, each level 1 heading in an org file is considered a part of a lecture. For each part, ox-beamer-lecture creates a folder during export which is named according to the corresponding heading. Within each folder, beamer slides (with overlays) and handout slides (without overlays) are created. In this way, ox-beamer-lecture provides a more convenient usage of the standard beamer export for creating series of slides. By extending the beamer export backend, the usual options for the beamer backend work as well.
