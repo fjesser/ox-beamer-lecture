@@ -18,7 +18,49 @@ The ox-beamer-lecture backend solves these problems. It makes use of beamer's =\
 
 Additionally, ox-beamer-lecture implements the =article= mode feature of the beamer package. Via article mode it is possible to export the whole lecture as one document. This can be used to create a script for a course. While exporting to the article version, the different beamer properties are adequately processed. It is also possible to include extra content in the article version. 
 
-I hope you find this package useful. While creating lectures for a university course, I found this export functionality quite helpful. I created a commented demo =demo-ox-beamer-lecture.org= in this repository which and shows how to use several features.
+I hope you find this package useful. While creating lectures for a university course, I found this export functionality quite helpful.
+
+* Demo File
+
+ I created a commented demo in this repository: =demo-ox-beamer-lecture.org=. You can download it to see and try out the different features of =ox-beamer-lecture=. To give an overview, it creates the following folders and files based on =demo-ox-beamer-lecture.org=. The names of the folders and files for the slides, =lectureNN-*=, are automatically named according to the level 1 headings in the org file. For each lecture part, a presentation file (=-beamer.pdf=) and a handout file is created. Lastly, the article version is placed in a separate folder.
+
+ #+begin_src bash :results output
+   tree . -P "demo*org|lecture*|*article*" -I "*~"
+ #+end_src
+
+ #+RESULTS:
+ #+begin_example
+ .
+ ├── article
+ │   ├── demo-ox-beamer-lecture-article.bbl
+ │   ├── demo-ox-beamer-lecture-article.pdf
+ │   └── demo-ox-beamer-lecture-article.tex
+ ├── demo-ox-beamer-lecture.org
+ ├── lecture01-welcome
+ │   ├── lecture01-welcome.bbl
+ │   ├── lecture01-welcome-beamer.bbl
+ │   ├── lecture01-welcome-beamer.pdf
+ │   ├── lecture01-welcome-beamer.tex
+ │   ├── lecture01-welcome.pdf
+ │   └── lecture01-welcome.tex
+ ├── lecture02-content-1
+ │   ├── lecture02-content-1.bbl
+ │   ├── lecture02-content-1-beamer.bbl
+ │   ├── lecture02-content-1-beamer.pdf
+ │   ├── lecture02-content-1-beamer.tex
+ │   ├── lecture02-content-1.pdf
+ │   └── lecture02-content-1.tex
+ └── lecture03-content-2
+     ├── lecture03-content-2.bbl
+     ├── lecture03-content-2-beamer.bbl
+     ├── lecture03-content-2-beamer.pdf
+     ├── lecture03-content-2-beamer.tex
+     ├── lecture03-content-2.pdf
+     └── lecture03-content-2.tex
+
+ 4 directories, 22 files
+ #+end_example
+
 
 * Usage
 
