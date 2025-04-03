@@ -1,4 +1,4 @@
-# -*- org-export-initial-scope: 'buffer; org-num-skip-tags: ("noexport"); -*-
+# -*- org-export-initial-scope: 'buffer; org-num-skip-tags: ("noexport" "B_frame"); -*-
 #+TITLE: Title of Lecture
 #+SUBTITLE: Subtitle Shown in Article Version
 #+STARTUP: num
