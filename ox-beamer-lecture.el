@@ -931,21 +931,19 @@ are passed to `org-export-to-file' (see its documentation for
 details)."
   (interactive)
   (cl-letf ((file (org-export-output-file-name ".tex" subtreep))
-            ;; Redefine functions for faster export
-            ;; Do not expand #+INCLUDE keywords:
-            ;; Is done regardless of C-v visibility export setting
-            ((symbol-function 'org-export-expand-include-keyword)
-             (lambda (&optional _a _b _c _d _e) nil))
-            ;; Do not process code blocks
-            (org-export-use-babel nil)
-            (org-latex-pdf-process
-             '("pdflatex -interaction=nonstopmode -output-directory=%o %f"))
             (org-beamer-lecture--lecture-number
              (org-beamer-lecture--prompt-lecture))
-            (org-beamer-lecture--to-compile t)
-            (org-beamer-lecture--compile-handout nil))
+            (org-beamer-lecture--to-compile nil)
+            (org-beamer-lecture--compile-handout nil)
+            ;; Redefine functions for faster export
+            ;; Do not expand #+INCLUDE keywords which is done
+            ;; regardless of C-v visibility export setting
+            ((symbol-function 'org-export-expand-include-keyword)
+             (lambda (&optional _a _b _c _d _e) nil))
+            (org-export-use-babel nil)
+            (org-latex-pdf-process
+             '("pdflatex -interaction=nonstopmode -output-directory=%o %f")))
     (org-export-to-file 'beamer-lecture file
-      ;; t = Export body only
       async subtreep visible-only body-only ext-plist
       #'org-beamer-lecture--compile)))
 
