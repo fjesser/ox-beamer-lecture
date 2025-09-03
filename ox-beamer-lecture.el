@@ -608,47 +608,48 @@ is no template available."
         (org-latex-title-command "\\begin{frame}\n\\maketitle\\end{frame}")
         (index 0)) ; Index for while loop
     ;; Check whether input number is allowed
-    (when (or (< org-beamer-lecture--lecture-number 0)
+    (when (or (< org-beamer-lecture--lecture-number -1)
               (> org-beamer-lecture--lecture-number (length lecture-labels)))
       (error "Lecture number %s does not exist" org-beamer-lecture--lecture-number))
-    ;; Loop over selected lectures
-    (while (< index (length lecture-labels))
-      (let* ((lecture (nth index lecture-labels))
-             (label (car lecture))
-             (title (cdr lecture))
-             (title-dir (org-beamer-lecture--transform-title title)))
-        (when (or (= org-beamer-lecture--lecture-number 0)
-                  (= (1- org-beamer-lecture--lecture-number) index))
-          ;; Use overall title for subtitle
-          (when org-beamer-lecture-title-as-subtitle
-            (plist-put info :subtitle (plist-get info :title)))
-          ;; Use lecture title for lecture and remove latex code
-          (plist-put info :title (org-beamer-lecture-remove-latex
-                                  title))
-          ;; Use EXPORT_DATE property of lecture
-          (plist-put info :date `(,(nth index org-beamer-lecture--dates)))
-          ;; Create and process tex files
-          (let* ((outdir (concat label "-" title-dir))
-                 (base-outfile (file-name-concat outdir outdir))
-                 (beamer-texfile (concat base-outfile
-                                         org-beamer-lecture-beamer-suffix
-                                         ".tex") )
-                 (handout-texfile (concat base-outfile
-                                          org-beamer-lecture-handout-suffix
-                                          ".tex"))
-                 (slides-body (format "\\mode<all>{\\input{../%s}}\n\n"
-                                      (plist-get info :output-file)))
-                 ;; Logic taken from org-export-as
-                 (tex-template (if (plist-get info :with-cite-processors)
-                                   (org-cite-finalize-export
-                                    (org-beamer-template slides-body info)
-                                    info)
-                                 (org-beamer-template slides-body info))))
-            ;; Create directory
-            (unless (file-directory-p outdir)
-              (make-directory outdir))
-            ;; Create beamer tex file
-            ;; (format) throws error with LaTeX comments. Use (format-spec)
+    (unless (eq org-beamer-lecture--lecture-number -1)
+      ;; Loop over selected lectures
+      (while (< index (length lecture-labels))
+        (let* ((lecture (nth index lecture-labels))
+               (label (car lecture))
+               (title (cdr lecture))
+               (title-dir (org-beamer-lecture--transform-title title)))
+          (when (or (= org-beamer-lecture--lecture-number 0)
+                    (= (1- org-beamer-lecture--lecture-number) index))
+            ;; Use overall title for subtitle
+            (when org-beamer-lecture-title-as-subtitle
+              (plist-put info :subtitle (plist-get info :title)))
+            ;; Use lecture title for lecture and remove latex code
+            (plist-put info :title (org-beamer-lecture-remove-latex
+                                    title))
+            ;; Use EXPORT_DATE property of lecture
+            (plist-put info :date `(,(nth index org-beamer-lecture--dates)))
+            ;; Create and process tex files
+            (let* ((outdir (concat label "-" title-dir))
+                   (base-outfile (file-name-concat outdir outdir))
+                   (beamer-texfile (concat base-outfile
+                                           org-beamer-lecture-beamer-suffix
+                                           ".tex") )
+                   (handout-texfile (concat base-outfile
+                                            org-beamer-lecture-handout-suffix
+                                            ".tex"))
+                   (slides-body (format "\\mode<all>{\\input{../%s}}\n\n"
+                                        (plist-get info :output-file)))
+                   ;; Logic taken from org-export-as
+                   (tex-template (if (plist-get info :with-cite-processors)
+                                     (org-cite-finalize-export
+                                      (org-beamer-template slides-body info)
+                                      info)
+                                   (org-beamer-template slides-body info))))
+              ;; Create directory
+              (unless (file-directory-p outdir)
+                (make-directory outdir))
+              ;; Create beamer tex file
+              ;; (format) throws error with LaTeX comments. Use (format-spec)
             ;; with ignore-missing
             (with-temp-file beamer-texfile
               (insert (format-spec tex-template
@@ -667,7 +668,7 @@ is no template available."
       (setq index (1+ index)))
     ;; Correct order of lectures to compile
     (setq org-beamer-lecture--to-compile
-          (nreverse org-beamer-lecture--to-compile)))
+          (nreverse org-beamer-lecture--to-compile))))
   ;; Only output contents, previous code is for side effects
   (concat
    (when (plist-get info :time-stamp-file)
@@ -798,6 +799,56 @@ plist holding export options."
      ;; Document end.
      "\\end{document}")))
 
+
+;;; Commands
+
+;;;###autoload
+(defun org-beamer-lecture-export-as-latex
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Export current buffer as a Beamer Lecture tex buffer.
+
+The content is the body which is inputted within the presentation and
+handout tex files.
+
+The user is prompted for the lecture number which creates the
+corresponding folder with the beamer and handout slides. Entering
+0 creates all possible folders and files.
+
+If narrowing is active in the current buffer, only export its
+narrowed part.
+
+If a region is active, export that region.
+
+A non-nil optional argument ASYNC means the process should happen
+asynchronously.  The resulting file should be accessible through
+the `org-export-stack' interface.
+
+When optional argument SUBTREEP is non-nil, export the sub-tree
+at point, extracting information from the headline properties
+first.
+
+When optional argument VISIBLE-ONLY is non-nil, don't export
+contents of hidden elements.
+
+When optional argument BODY-ONLY is non-nil, only write code
+between \"\\begin{document}\" and \"\\end{document}\". In this
+case no folder and files will be created, only the texfile
+containing the document's body will be created.
+
+EXT-PLIST, when provided, is a property list with external
+parameters overriding Org default settings, but still inferior to
+file-local settings.
+
+Return output file's name."
+  (interactive)
+  (let ((org-beamer-lecture--lecture-number -1)
+        ;; TODO: any number creates those tex files, change in template
+         ;;(org-beamer-lecture--prompt-lecture))
+        (org-beamer-lecture--to-compile nil))
+    (org-export-to-buffer 'beamer-lecture
+        "*Org BEAMER LECTURE Presentation Export*"
+      async subtreep visible-only body-only ext-plist
+      (lambda () (LaTeX-mode)))))
 
 ;;;###autoload
 (defun org-beamer-lecture-export-to-latexs

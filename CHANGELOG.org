@@ -1,0 +1,7 @@
+#+TITLE: ox-beamer.el - Changelog
+#+AUTHOR: Felix J. Esser
+* Development
+
+** Fixed
+
+- Add missing =org-beamer-lecture-export-as-latex= command
