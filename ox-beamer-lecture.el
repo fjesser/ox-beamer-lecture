@@ -139,6 +139,20 @@ Handout files do not contain overlays nor notes. It has the form
   :group 'org-export-beamer-lecture
   :type 'string)
 
+(defcustom org-beamer-lecture-auctex-add-local nil
+  "Whether to include file local variables for AUCTeX in slides.
+
+If t, file local variables are included at the end of the presentation
+tex files (beamer and handout) so that it is possible to compile them
+directly. Otherwise, running AUCTeX will fail because of the folder
+structure introduced by org-beamer-lecture.
+
+It can be set with the in-buffer options setting `#+OPTIONS: auctex:t'.
+The template for the local variables is defined in
+`org-beamer-lecture--auctex-variables-template'."
+  :group 'org-export-beamer-lecture
+  :type 'boolean)
+
 ;; Group: org-export-beamer-lecture-article
 (defcustom org-beamer-lecture-article-suffix "-article"
   "Suffix for files of article export."
@@ -219,6 +233,23 @@ for each lecture.")
 
 The variable will be populated with beamer and handout tex files
 which should be compiled.")
+
+(defvar org-beamer-lecture--auctex-variables-template (concat "
+%%% Local Variables:
+%%% mode: LaTeX
+%%% eval: (add-to-list 'TeX-command-list '(\"MyLaTeXMk\""
+" \"cd ..; latexmk %(latexmk-out) %(file-line-error)"
+" --output-directory='%D' %`%(extraopts) %S%(mode)%' %t\""
+" TeX-run-TeX nil (LaTeX-mode docTeX-mode) :help \"Run MyLaTeXMk\"))
+%%% TeX-command-default: \"MyLaTeXMk\"
+%%% End:
+")
+  "Template for AUCTeX file local variables used in presentation slides.
+
+Depending on `org-beamer-lecture-auctex-add-local' this template is
+added at the end of the presentation slides which makes it possible to
+compile tex files directly. `%D' will be expanded to the corresponding
+output directory within `org-beamer-lecture-template'.")
 
 
 ;;; Internal Functions
@@ -404,7 +435,8 @@ was compiled or raise an error if it couldn't be produced."
     ;; --- Beamer Export Settings
     ;; --- Beamer Lecture Export Settings
     (:headline-levels nil "H" org-beamer-lecture-frame-level)
-    (:beamer-lecture-label "BEAMER_LECTURE_LABEL" nil org-beamer-lecture-label))
+    (:beamer-lecture-label "BEAMER_LECTURE_LABEL" nil org-beamer-lecture-label)
+    (:beamer-lecture-auctex nil "auctex" org-beamer-lecture-auctex-add-local))
   :translate-alist
   '((headline . org-beamer-lecture-headline)
     (plain-list . org-beamer-lecture-plain-list)
@@ -642,17 +674,24 @@ is no template available."
                    (slides-body (format "\\mode<all>{\\input{../%s}}\n\n"
                                         (plist-get info :output-file)))
                    ;; Logic taken from org-export-as
-                   (tex-template (if (plist-get info :with-cite-processors)
-                                     (org-cite-finalize-export
-                                      (org-beamer-template slides-body info)
-                                      info)
-                                   (org-beamer-template slides-body info))))
+                   (tex-template (concat
+                                  (if (plist-get info :with-cite-processors)
+                                      (org-cite-finalize-export
+                                       (org-beamer-template slides-body info)
+                                       info)
+                                    (org-beamer-template slides-body info))
+                                  (when org-beamer-lecture-auctex-add-local
+                                    "\n"
+                                    (format-spec
+                                     org-beamer-lecture--auctex-variables-template
+                                     `((?D . ,outdir))
+                                     t)))))
               ;; Create directory
               (unless (file-directory-p outdir)
                 (make-directory outdir))
               ;; Create beamer tex file
               ;; (format) throws error with LaTeX comments. Use (format-spec)
-            ;; with ignore-missing
+              ;; with ignore-missing
             (with-temp-file beamer-texfile
               (insert (format-spec tex-template
                                    `((?h . "")
@@ -844,8 +883,6 @@ file-local settings.
 Return output file's name."
   (interactive)
   (let ((org-beamer-lecture--lecture-number -1)
-        ;; TODO: any number creates those tex files, change in template
-         ;;(org-beamer-lecture--prompt-lecture))
         (org-beamer-lecture--to-compile nil))
     (org-export-to-buffer 'beamer-lecture
         "*Org BEAMER LECTURE Presentation Export*"
