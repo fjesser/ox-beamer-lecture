@@ -2,6 +2,10 @@
 #+AUTHOR: Felix J. Esser
 * Development
 
+** Added
+
+- Added feature to include AUCTeX file local variables into presentation tex files (beamer and handout) so that it is possible to compile the tex files directly for debugging or experimenting. See =org-beamer-lecture-auctex-add-local=.
+
 ** Fixed
 
 - Add missing =org-beamer-lecture-export-as-latex= command

@@ -11,7 +11,7 @@ capabilities.
 *Feature Overview*
 1) Use of beamer's =\lecture= command to create a series of beamer slides
    - By default, each level 1 heading in an org file is considered a part of a lecture.
-2) Automatic folder creation and naming of folders and files
+2) Automatic folder creation as well as naming of folders and files
 3) Simultaneous export to beamer slides (with overlay) and handout slides (without overlays)
 4) Possible to use beamer's article mode
    - Create one document of all lecture content
@@ -154,6 +154,10 @@ The following configuration variables are available. =d:= stands for the default
 - =org-beamer-lecture-title-as-subtitle=
   - Whether to use =#+TITLE= as subtitle in slides export. In the slides, the title is the L1 heading of the lecture part.
   - d: t
+- =org-beamer-lecture-auctex-add-local=
+  - Whether to include AUCTeX file local variables into presentation tex files (beamer and handout) so that it is possible to compile the tex files directly for debugging or experimenting. See =org-beamer-lecture--auctex-variables-template= for the template.
+  - d: nil
+  - In-buffer setting: =#+OPTIONS: auctex: t=
 
 ** Article Mode Settings
 
@@ -173,6 +177,7 @@ The following configuration variables are available. =d:= stands for the default
   - d: "\\setlength{\\parindent}{0pt}\\setlength{\\parskip}{2pt plus 1pt}"
 - =org-beamer-lecture-article-rename-chapter=
   - Whether to insert a =\renewcommand{\chaptername}{LABEL}= line during article export. LABEL depends on =org-beamer-lecture-article-label=.
+  - d: t
   - In-buffer setting: =#+OPTIONS: rch: t=
   - If nil, the variable =org-beamer-lecture-article-label= has no effect.
 - =org-beamer-lecture-article-suffix=
