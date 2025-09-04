@@ -70,6 +70,7 @@
   :group 'org-export-beamer-lecture
   :version "29.4")
 
+;; Group: org-export-beamer-lecture
 (defcustom org-beamer-lecture-frame-level 3
   "The level at which headlines become frames.
 
@@ -138,9 +139,10 @@ Handout files do not contain overlays nor notes. It has the form
   :group 'org-export-beamer-lecture
   :type 'string)
 
+;; Group: org-export-beamer-lecture-article
 (defcustom org-beamer-lecture-article-suffix "-article"
   "Suffix for files of article export."
-  :group 'org-export-beamer-lecture
+  :group 'org-export-beamer-lecture-article
   :type 'string)
 
 (defcustom org-beamer-lecture-article-rename-chapter t
