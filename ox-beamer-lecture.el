@@ -237,11 +237,12 @@ which should be compiled.")
 (defvar org-beamer-lecture--auctex-variables-template (concat "
 %%% Local Variables:
 %%% mode: LaTeX
-%%% eval: (add-to-list 'TeX-command-list '(\"MyLaTeXMk\""
+%%% eval: (add-to-list 'TeX-command-list '(\"LaTeXMk-ox-beamer-lecture\""
 " \"cd ..; latexmk %(latexmk-out) %(file-line-error)"
-" --output-directory='%D' %`%(extraopts) %S%(mode)%' %t\""
+" %`%(extraopts) %S%(mode)%' %t\""
 " TeX-run-TeX nil (LaTeX-mode docTeX-mode) :help \"Run MyLaTeXMk\"))
-%%% TeX-command-default: \"MyLaTeXMk\"
+%%% TeX-command-default: \"LaTeXMk-ox-beamer-lecture\"
+%%% TeX-command-extra-options: \"--output-directory='%D'\"
 %%% End:
 ")
   "Template for AUCTeX file local variables used in presentation slides.
@@ -249,7 +250,9 @@ which should be compiled.")
 Depending on `org-beamer-lecture-auctex-add-local' this template is
 added at the end of the presentation slides which makes it possible to
 compile tex files directly. `%D' will be expanded to the corresponding
-output directory within `org-beamer-lecture-template'.")
+output directory within `org-beamer-lecture-template'.
+`TeX-command-extra-options' is chosen over `TeX-output-dir' because the
+latter would impede other AUCTeX commands like Clean.")
 
 
 ;;; Internal Functions
